@@ -1,0 +1,6 @@
+JSON
+
+[
+  {"id":1,"client":"ABC Ltd","load":"Electronics","weight":1,"pickup":"Warsaw","delivery":"Berlin","revenue":2500},
+  {"id":2,"client":"XYZ Ltd","load":"Furniture","weight":2.5,"pickup":"Poznan","delivery":"Munich","revenue":4000}
+]
