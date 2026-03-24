@@ -1,0 +1,39 @@
+YAML
+name: Autonomous System CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: "*/10 * * * *"  # Runs every 10 minutes
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r logi_agent_package/requirements.txt
+          pip install -r trading_ai_package/requirements.txt
+          pip install -r crypto_forensics_package/requirements.txt
+          pip install -r dashboard_updater_package/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          pytest logi_agent_package/tests
+          pytest trading_ai_package/tests
+          pytest crypto_forensics_package/tests
+          pytest dashboard_updater_package/tests
+
+      - name: Deploy Cron Jobs
+        run: bash cron_jobs.sh
