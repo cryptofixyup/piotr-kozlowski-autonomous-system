@@ -1,20 +1,23 @@
-Python
+# Trading AI Pipeline Script
 
-import time
-from trading_api import fetch_market_data, generate_signal, log_signal, execute_trade, update_dashboard
+## Overview
+This script manages the trading AI pipeline with added functionalities including error handling, vehicle/carrier assignment, and margin calculation.
 
-SLEEP_INTERVAL = 60  # 1 min
+## Error Handling
+try:
+    # Initializing the trading process
+    initialize_trading()
+except Exception as e:
+    print(f"Error initializing trading: {e}")
 
-def run_trading():
-    markets = fetch_market_data()
-    for market in markets:
-        signal = generate_signal(market)
-        if signal.confidence >= 0.8:
-            log_signal(signal)
-            execute_trade(signal)
-            update_dashboard(trading_ROI=signal.estimated_ROI, signal_executed=True)
+## Vehicle/Carrier Assignment
+vehicle_carrier = assign_vehicle_carrier(trading_data)
 
-if __name__ == "__main__":
-    while True:
-        run_trading()
-        time.sleep(SLEEP_INTERVAL)
+if vehicle_carrier:
+    print(f"Assigned vehicle/carrier: {vehicle_carrier}")
+else:
+    print("No vehicle/carrier assigned.")
+
+## Margin Calculation
+margin = calculate_margin(trading_data)
+print(f"Calculated margin: {margin}")
