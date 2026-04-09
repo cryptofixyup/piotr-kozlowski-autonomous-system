@@ -1,5 +1,4 @@
-JSON
-{
-  "markets":["BTC-USD","ETH-USD","PLTR"],
-  "confidence_threshold":0.8
+{  "markets": ["BTC-USD", "ETH-USD", "PLTR"],
+  "confidence_threshold": 0.8
 }
+
