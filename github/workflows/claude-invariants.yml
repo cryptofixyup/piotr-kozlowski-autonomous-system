@@ -1,0 +1,23 @@
+name: CLAUDE.md Invariant Check
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  invariants:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check CLAUDE.md exists
+        run: test -f CLAUDE.md
+      - name: Rule 4.1 - No divide-by-zero
+        run: |
+          ! grep -r "timestamp - last_update" --include="*.rs" rust-engine/ || exit 1
+      - name: Rule 4.2 - Causal graph DAG check  
+        run: |
+          ! grep -r "HashMap<String, (String, u64)>" --include="*.rs" rust-engine/ || exit 1
+      - name: Rule 4.2 - No in-place ops on grad tensors
+        run: |
+          ! grep -r "+=" --include="*.rs" rust-engine/ || exit 1
+      - name: Rule 4.3 - Redis stream consumer group
+        run: |
+          grep -r "XGROUP CREATE" --include="*.rs" --include="*.py" . || exit 1
