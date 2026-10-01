@@ -42,7 +42,7 @@ jobs:
             --vulnerability-service osv || true
 
       - name: Upload Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pip-audit-full
           path: pip-audit-full.json
@@ -68,7 +68,7 @@ jobs:
           osv-python scan --format json --output osv-report.json . || true
 
       - name: Upload OSV Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: osv-report
           path: osv-report.json
@@ -104,7 +104,7 @@ jobs:
           args: --severity-threshold=high --json-file-output=snyk-report.json || true
 
       - name: Upload Snyk Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: snyk-report
           path: snyk-report.json
