@@ -40,7 +40,7 @@ jobs:
             -o bandit-report.json || true
 
       - name: Upload Bandit Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bandit-report
           path: bandit-report.json
@@ -85,7 +85,7 @@ jobs:
           pip-audit --strict --format json --output pip-audit-report.json || true
 
       - name: Upload pip-audit Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pip-audit-report
           path: pip-audit-report.json
@@ -110,7 +110,7 @@ jobs:
             . || true
 
       - name: Upload Semgrep Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: semgrep-report
           path: semgrep-report.json
