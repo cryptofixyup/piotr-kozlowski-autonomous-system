@@ -1,1 +1,80 @@
-bmFtZTogSGVsbSBDaGFydCBWYWxpZGF0aW9uCgpvbjoKICBwdXNoOgogICAgYnJhbmNoZXM6CiAgICAgIC0gbWFpbgogICAgICAtIGRldmVsb3AKICAgIHBhdGhzOgogICAgICAtICdoZWxtLyoqJwogICAgICAtICcuZ2l0aHViL3dvcmtmbG93cy9oZWxtLXZhbGlkYXRlLnltbCcKICBwdWxsX3JlcXVlc3Q6CiAgICBicmFuY2hlczoKICAgICAgLSBtYWluCiAgICBwYXRoczoKICAgICAgLSAnaGVsbS8qKicKCmpvYnM6CiAgaGVsbS1saW50OgogICAgcnVucy1vbjogdWJ1bnR1LWxhdGVzdAogICAgc3RyYXRlZ3k6CiAgICAgIG1hdHJpeDoKICAgICAgICBjaGFydDoKICAgICAgICAgIC0gaGVsbS9yZWxheXNoaWVsZAogICAgc3RlcHM6CiAgICAgIC0gdXNlczogYWN0aW9ucy9jaGVja291dEB2NAoKICAgICAgLSBuYW1lOiBTZXQgdXAgSGVsbQogICAgICAgIHVzZXM6IGF6dXJlL3NldHVwLWhlbG1AdjMKICAgICAgICB3aXRoOgogICAgICAgICAgdmVyc2lvbjogJ3YzLjEyLjAnCgogICAgICAtIG5hbWU6IEhlbG0gTGludAogICAgICAgIHJ1bjogfAogICAgICAgICAgaGVsbSBsaW50ICR7eyBtYXRyaXguY2hhcnQgfX0KCiAgICAgIC0gbmFtZTogSGVsbSBUZW1wbGF0ZSBWYWxpZGF0aW9uCiAgICAgICAgcnVuOiB8CiAgICAgICAgICBoZWxtIHRlbXBsYXRlIHJlbGF5c2hpZWxkICR7eyBtYXRyaXguY2hhcnQgfX0gLS1kZWJ1ZwoKICAgICAgLSBuYW1lOiBIZWxtIENoYXJ0IFNlY3VyaXR5IFNjYW4KICAgICAgICBydW46IHwKICAgICAgICAgIGhlbG0gdGVtcGxhdGUgcmVsYXlzaGllbGQgJHt7IG1hdHJpeC5jaGFydCB9fSB8IGt1YmV2YWwgLS1zdHJpY3QgfHwgdHJ1ZQoKICAgICAgLSBuYW1lOiBQYWNrYWdlIEhlbG0gQ2hhcnQKICAgICAgICBydW46IHwKICAgICAgICAgIG1rZGlyIC1wIGNoYXJ0LXBhY2thZ2VzCiAgICAgICAgICBoZWxtIHBhY2thZ2UgJHt7IG1hdHJpeC5jaGFydCB9fSAtZCBjaGFydC1wYWNrYWdlcwoKICAgICAgLSBuYW1lOiBVcGxvYWQgQ2hhcnQgQXJ0aWZhY3RzCiAgICAgICAgdXNlczogYWN0aW9ucy91cGxvYWQtYXJ0aWZhY3RAdjQKICAgICAgICB3aXRoOgogICAgICAgICAgbmFtZTogaGVsbS1jaGFydHMKICAgICAgICAgIHBhdGg6IGNoYXJ0LXBhY2thZ2VzLwoKICBoZWxtLWludGVncmF0aW9uLXRlc3Q6CiAgICBuZWVkczo gaGVsbS1saW50CiAgICBydW5zLW9uOiB1YnVudHUtbGF0ZXN0CiAgICBzdGVwczoKICAgICAgLSB1c2VzOiBhY3Rpb25zL2NoZWNrb3V0QHY0CgogICAgICAtIG5hbWU6IFNldCB1cCBIZWxtCiAgICAgICAgdXNlczogYXp1cmUvc2V0dXAtaGVsbUB2MwogICAgICAgIHdpdGg6CiAgICAgICAgICB2ZXJzaW9uOiAndjMuMTIuMCcKCiAgICAgIC0gbmFtZTogQ3JlYXRlIEtpbmQgQ2x1c3RlcgogICAgICAgIHVzZXM6IGhlbG0va2luZC1hY3Rpb25AdjEuNy4wCgogICAgICAtIG5hbWU6IERlcGxveSBDaGFydCB0byBLaW5kCiAgICAgICAgcnVuOiB8CiAgICAgICAgICBoZWxtIHJlcG8gYWRkIHJlbGF5c2hpZWxkIC4vaGVsbS9yZWxheXNoaWVsZCB8fCB0cnVlCiAgICAgICAgICBoZWxtIGluc3RhbGwgcmVsYXlzaGllbGQgLi9oZWxtL3JlbGF5c2hpZWxkIFwKICAgICAgICAgICAgLS1uYW1lc3BhY2UgcmVsYXlzaGllbGQtZGV2IFwKICAgICAgICAgICAgLS1jcmVhdGUtbmFtZXNwYWNlIFwKICAgICAgICAgICAgLS12YWx1ZXMgaGVsbS9yZWxheXNoaWVsZC92YWx1ZXMtZGV2LnlhbWwgfHwgdHJ1ZQoKICAgICAgLSBuYW1lOiBWZXJpZnkgRGVwbG95bWVudAogICAgICAgIHJ1bjogfAogICAgICAgICAga3ViZWN0bCBnZXQgcG9kcyAtbiByZWxheXNoaWVsZC1kZXYgfHwgdHJ1ZQogICAgICAgICAga3ViZWN0bCBnZXQgc2VydmljZXMgLW4gcmVsYXlzaGllbGQtZGV2IHx8IHRydWUK
+name: Helm Chart Validation
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'helm/**'
+      - '.github/workflows/helm-validate.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'helm/**'
+
+jobs:
+  helm-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart:
+          - helm/relayshield
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.12.0'
+
+      - name: Helm Lint
+        run: |
+          helm lint ${{ matrix.chart }}
+
+      - name: Helm Template Validation
+        run: |
+          helm template relayshield ${{ matrix.chart }} --debug
+
+      - name: Helm Chart Security Scan
+        run: |
+          helm template relayshield ${{ matrix.chart }} | kubeval --strict || true
+
+      - name: Package Helm Chart
+        run: |
+          mkdir -p chart-packages
+          helm package ${{ matrix.chart }} -d chart-packages
+
+      - name: Upload Chart Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-charts
+          path: chart-packages/
+
+  helm-integration-test:
+    needs: helm-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.12.0'
+
+      - name: Create Kind Cluster
+        uses: helm/kind-action@v1.7.0
+
+      - name: Deploy Chart to Kind
+        run: |
+          helm repo add relayshield ./helm/relayshield || true
+          helm install relayshield ./helm/relayshield \
+            --namespace relayshield-dev \
+            --create-namespace \
+            --values helm/relayshield/values-dev.yaml || true
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods -n relayshield-dev || true
+          kubectl get services -n relayshield-dev || true
