@@ -35,7 +35,7 @@ jobs:
               "paths": ["."],
               "paths-ignore": [".git", "venv", ".venv", "node_modules", "__pycache__"],
               "queries": [
-                "+security-and-quality"
+                { "uses": "security-and-quality" }
               ]
             }
 
