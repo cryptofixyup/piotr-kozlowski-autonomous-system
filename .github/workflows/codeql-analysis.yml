@@ -30,14 +30,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          config: |
-            {
-              "paths": ["."],
-              "paths-ignore": [".git", "venv", ".venv", "node_modules", "__pycache__"],
-              "queries": [
-                "+security-and-quality"
-              ]
-            }
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
