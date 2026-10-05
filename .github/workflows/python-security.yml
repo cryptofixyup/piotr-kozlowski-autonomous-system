@@ -94,11 +94,17 @@ jobs:
   semgrep-scan:
     name: Semgrep Static Analysis
     runs-on: ubuntu-latest
-    container:
-      image: returntocorp/semgrep:1.60.0
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Semgrep
+        run: pip install semgrep
 
       - name: Run Semgrep
         run: |
