@@ -1,0 +1,5 @@
+name: logistics-python
+paths:
+  - apps/api
+  - packages
+  - services
