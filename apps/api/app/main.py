@@ -21,7 +21,10 @@ def health() -> dict[str, str]:
 def optimize(
     request: OptimizeRequest,
     actor: ActorContext = Depends(require_actor),
-    idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=8, max_length=200)] = "",
+    idempotency_key: Annotated[
+        str,
+        Header(alias="Idempotency-Key", min_length=8, max_length=200),
+    ] = "",
 ):
     if not idempotency_key.strip():
         raise HTTPException(
@@ -40,8 +43,8 @@ def optimize(
         )
     except IdempotencyConflict as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
-    except (RuntimeError, psycopg.OperationalError) as exc:
+    except (RuntimeError, psycopg.Error) as exc:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=str(exc),
+            detail="Persistent operation unavailable",
         ) from exc
