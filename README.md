@@ -1,50 +1,24 @@
-# Piotr Kozlowski Autonomous System
+# Piotr Kozłowski — Autonomous Operations System
 
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+Production-oriented scaffold for a fully automated operations ecosystem, starting with Logi-Agent logistics optimization.
 
-> Modular, production-ready framework for autonomous agents across logistics, trading, and crypto forensics.
+## Scope
+- Orders, fleet, carriers and routes
+- Deterministic cost/margin optimization
+- Backhaul and consolidation extension points
+- AI orchestration boundary
+- Policy gates, auditability and observability
+- CI/CD developer handoff
 
-The **Piotr Kozlowski Autonomous System** is a collection of three independent, config-driven AI pipelines designed for real operational workloads. Each package is self-contained, observable, and can run standalone or be orchestrated together.
+## Design principle
+Deterministic business rules remain the source of truth. AI enriches, ranks and explains; it does not override hard constraints.
 
----
-
-## Architecture
-piotr-kozlowski-autonomous-system/
-├─ logi_agent_package/          # Logistics optimization
-│  ├─ logi_agent_pipeline.py
-│  ├─ config.json
-│  ├─ mock_orders.json
-│  ├─ requirements.txt
-│  └─ README.md
-├─ trading_ai_package/          # Trading strategy & backtesting
-│  ├─ trading_ai_pipeline.py
-│  ├─ config.json
-│  ├─ mock_market_data.json
-│  ├─ requirements.txt
-│  └─ README.md
-└─ crypto_forensics_package/    # On-chain analysis
-   ├─ forensics_pipeline.py
-   ├─ config.json
-   ├─ requirements.txt
-   └─ README.md
-   
----
-
-## Modules
-
-### 1. Logi-Agent Package
-Autonomous logistics optimization.
-
-**Capabilities:**
-- Fetches new orders from source systems
-- Assigns vehicles & carriers using constraint-based matching
-- Calculates margin, detects backhaul opportunities and load consolidation
-- Updates dashboard metrics in real-time
-
-**Run:**
+## Run locally
 ```bash
-cd logi_agent_package
-pip install -r requirements.txt
-python logi_agent_pipeline.py
+docker compose up --build
+curl http://localhost:8000/health
+```
+
+API docs: http://localhost:8000/docs
+
+See [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
