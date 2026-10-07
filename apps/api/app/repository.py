@@ -132,7 +132,7 @@ class PersistenceRepository:
             conn.execute(
                 """
                 UPDATE idempotency_keys
-                SET response_json = %s
+                SET response_json = %s, completed_at = now()
                 WHERE key = %s
                 """,
                 (Jsonb(response_json), idempotency_key),
