@@ -1,5 +1,6 @@
 import os
 
+import psycopg
 import pytest
 
 from app.repository import PersistenceRepository
@@ -34,7 +35,7 @@ def test_optimization_persistence_is_atomic_and_idempotent():
         "audit_event": {
             "event_type": "order.optimization.completed",
             "aggregate_id": "integration-order-1",
-            "actor": "system",
+            "actor": "integration-test",
             "payload": {"decision": "approve"},
             "occurred_at": "2026-01-01T00:00:00+00:00",
         },
@@ -54,6 +55,29 @@ def test_optimization_persistence_is_atomic_and_idempotent():
     )
 
     assert first == second
+
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        order_count = conn.execute(
+            "SELECT count(*) FROM orders WHERE id = %s",
+            ("integration-order-1",),
+        ).fetchone()[0]
+        decision_count = conn.execute(
+            "SELECT count(*) FROM optimization_decisions WHERE idempotency_key = %s",
+            ("integration:test:1",),
+        ).fetchone()[0]
+        audit_count = conn.execute(
+            "SELECT count(*) FROM audit_events WHERE aggregate_id = %s",
+            ("integration-order-1",),
+        ).fetchone()[0]
+        outbox_count = conn.execute(
+            "SELECT count(*) FROM outbox_events WHERE aggregate_id = %s",
+            ("integration-order-1",),
+        ).fetchone()[0]
+
+    assert order_count == 1
+    assert decision_count == 1
+    assert audit_count == 1
+    assert outbox_count == 1
 
     conflicting_request = {
         **request,
