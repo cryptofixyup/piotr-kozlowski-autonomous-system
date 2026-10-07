@@ -12,4 +12,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r apps/api/requirements.txt
-      - run: PYTHONPATH=. pytest -q apps/api/tests tests
+      - run: PYTHONPATH=apps/api:. pytest -q apps/api/tests tests
