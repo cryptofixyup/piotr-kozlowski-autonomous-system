@@ -3,110 +3,45 @@ name: Dependency Audit
 on:
   push:
     branches: [ main, develop ]
-    paths:
-      - 'requirements.txt'
-      - '**.txt'
-      - 'pyproject.toml'
-      - 'setup.py'
   pull_request:
-    branches: [ main ]
-    paths:
-      - 'requirements.txt'
-      - '**.txt'
-      - 'pyproject.toml'
-      - 'setup.py'
+    branches: [ main, 'fixpack-1-p0' ]
   schedule:
-    - cron: '0 12 * * *'  # Daily at noon UTC
+    - cron: '0 12 * * *'
 
 jobs:
-  pip-audit-full:
+  pip-audit:
     name: Comprehensive pip-audit Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -r apps/api/requirements.txt
       - name: Install pip-audit
-        run: pip install pip-audit==2.7.3
+        run: pip install pip-audit
+      - name: Run pip-audit
+        run: pip-audit --strict
 
-      - name: Run pip-audit with OSV
-        run: |
-          pip-audit --strict \
-            --format json \
-            --output pip-audit-full.json \
-            --vulnerability-service osv || true
-
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: pip-audit-full
-          path: pip-audit-full.json
-          retention-days: 30
-
-  osv-scan:
-    name: OSV Vulnerability Database Scan
+  snyk:
+    name: Snyk Vulnerability Scan
+    if: ${{ secrets.SNYK_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
-      - name: Install OSV Python
-        run: pip install osv-python==1.0.0
-
-      - name: Run OSV Scan
-        run: |
-          osv-python scan --format json --output osv-report.json . || true
-
-      - name: Upload OSV Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: osv-report
-          path: osv-report.json
-          retention-days: 30
-
-  dependabot-alerts:
-    name: Check Dependabot Alerts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get Dependabot Alerts
-        uses: advanced-security/make-dependabot-alert@v1
-        with:
-          alert-number: 1
-          repo: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
-
-  snyk-scan:
-    name: Snyk Vulnerability Scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -r apps/api/requirements.txt
       - name: Run Snyk
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --json-file-output=snyk-report.json || true
-
-      - name: Upload Snyk Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: snyk-report
-          path: snyk-report.json
-          retention-days: 30
-        continue-on-error: true
+          args: --severity-threshold=high
