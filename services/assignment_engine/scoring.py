@@ -1,16 +1,9 @@
-def vehicle_score(vehicle, order) -> float:
-    if not vehicle.available or vehicle.capacity_kg < order.weight_kg:
-        return -1.0
-    capacity_fit = min(order.weight_kg / vehicle.capacity_kg, 1.0)
-    efficiency = 1.0 / max(vehicle.fuel_l_per_100km, 0.1)
-    return 0.50 * (1.0 - capacity_fit + 0.5) + 0.50 * min(efficiency / 0.5, 1.0)
+def vehicle_score(v,o):
+    if not v.available or v.capacity_kg<o.weight_kg:return -1.0
+    utilization=o.weight_kg/v.capacity_kg
+    normalized_efficiency=min((1/max(v.fuel_l_per_100km,.1))/.5,1.0)
+    return .65*utilization+.35*normalized_efficiency
 
-def carrier_score(carrier) -> float:
-    if not carrier.verified or carrier.availability <= 0:
-        return -1.0
-    return (
-        0.35 * (carrier.rating / 5.0)
-        + 0.25 * carrier.availability
-        + 0.20 * float(carrier.verified)
-        + 0.20 * (1.0 / (1.0 + carrier.cost_per_km))
-    )
+def carrier_score(c):
+    if not c.verified or c.availability<=0:return -1.0
+    return .35*(c.rating/5)+.25*c.availability+.20*float(c.verified)+.20*(1/(1+c.cost_per_km))
