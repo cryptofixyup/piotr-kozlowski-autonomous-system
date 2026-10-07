@@ -1,3 +1,5 @@
+from .audit import build_audit_event
+from .policy import evaluate_margin
 from .schemas import OptimizeRequest
 
 def select_vehicle(request: OptimizeRequest):
@@ -37,17 +39,23 @@ def optimize_order(request: OptimizeRequest):
     carrier_cost = request.route.distance_km * carrier.cost_per_km
     total_cost = fuel_cost + carrier_cost + request.route.toll_cost_pln
     margin_pln = request.order.revenue_pln - total_cost
-    margin_pct = (
-        100 * margin_pln / request.order.revenue_pln
-        if request.order.revenue_pln
-        else 0
-    )
+    margin_pct = 100 * margin_pln / request.order.revenue_pln if request.order.revenue_pln else 0
+    policy = evaluate_margin(margin_pct, request.target_margin_pct)
 
-    return {
-        "decision": "approve" if margin_pct >= request.target_margin_pct else "review",
+    result = {
+        "decision": "approve" if policy.allowed else ("review" if policy.requires_approval else "reject"),
+        "reason": policy.reason,
         "vehicle_id": vehicle.id,
         "carrier_id": carrier.id,
         "cost_pln": round(total_cost, 2),
         "margin_pln": round(margin_pln, 2),
         "margin_pct": round(margin_pct, 2),
+        "requires_approval": policy.requires_approval,
     }
+    result["audit_event"] = build_audit_event(
+        "order.optimization.completed",
+        request.order.id,
+        "system",
+        result,
+    )
+    return result
