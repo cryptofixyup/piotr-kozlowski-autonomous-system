@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE IF NOT EXISTS orders (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id TEXT PRIMARY KEY,
     external_ref TEXT UNIQUE,
     origin TEXT NOT NULL,
     destination TEXT NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS orders (
 
 CREATE TABLE IF NOT EXISTS optimization_decisions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    order_id UUID NOT NULL REFERENCES orders(id),
+    order_id TEXT NOT NULL REFERENCES orders(id) ON DELETE RESTRICT,
     decision TEXT NOT NULL,
     reason TEXT NOT NULL,
     vehicle_id TEXT,
