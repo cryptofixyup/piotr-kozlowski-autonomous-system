@@ -125,7 +125,7 @@ class PersistenceRepository:
                     (aggregate_id, event_type, payload)
                 VALUES (%s, %s, %s)
                 """,
-                (order["id"], "order.optimization.completed", Jsonb(outbox_payload)),
+                (order["id"], audit_event["event_type"], Jsonb(outbox_payload)),
             )
 
             response_json = json.loads(json.dumps(result))
