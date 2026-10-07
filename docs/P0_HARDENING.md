@@ -32,7 +32,7 @@ Execution sequence:
 
 ## Persistence boundary
 
-Every mutation requires an `Idempotency-Key`. The same key may only be reused for the same request payload and authenticated actor. A conflicting reuse returns `409 Conflict`.
+Every mutation requires an Idempotency-Key. The same key may only be reused for the same request payload and authenticated actor. A conflicting reuse returns 409 Conflict.
 
 The optimization decision, audit event, idempotency record, and outbox event are committed in one PostgreSQL transaction. If any write fails, none of them is committed.
 
@@ -40,23 +40,23 @@ The outbox is intentionally inert in P0.2: no external execution consumer is ena
 
 ## Authentication boundary
 
-`Authorization: Bearer <token>` is required for mutation endpoints. The configured token maps to `AUTONOMOUS_ACTOR_ID`, so the caller cannot self-assert an actor identity with a separate header.
+A bearer authentication header is required for mutation endpoints. The configured credential maps to AUTONOMOUS_ACTOR_ID, so the caller cannot self-assert an actor identity with a separate header.
 
-This is an authenticated API boundary, not a final enterprise IAM implementation. OIDC/JWT/service identity can replace the token verifier without changing the persistence contract.
+This is an authenticated API boundary, not a final enterprise IAM implementation. OIDC/JWT/service identity can replace the credential verifier without changing the persistence contract.
 
 ## Local execution
 
-```bash
-docker compose up --build
-curl http://localhost:8000/health
-```
+Copy .env.example to .env and set AUTONOMOUS_API_TOKEN locally.
 
-For `/v1/optimize`, send:
+Then run:
 
-```text
-Authorization: Bearer local-dev-token
-Idempotency-Key: optimize-order-001
-```
+    docker compose up --build
+
+Health check:
+
+    curl http://localhost:8000/health
+
+For mutation requests, provide the configured authentication credential and a unique Idempotency-Key.
 
 ## Safety boundary
 
