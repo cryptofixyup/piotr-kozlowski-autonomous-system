@@ -1,0 +1,11 @@
+from enum import Enum
+
+class OrderStatus(str, Enum):
+    NEW = "NEW"
+    VALIDATED = "VALIDATED"
+    ASSIGNED = "ASSIGNED"
+    ROUTE_OPTIMIZED = "ROUTE_OPTIMIZED"
+    IN_TRANSIT = "IN_TRANSIT"
+    DELIVERED = "DELIVERED"
+    INVOICED = "INVOICED"
+    CLOSED = "CLOSED"
