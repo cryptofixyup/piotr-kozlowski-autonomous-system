@@ -15,3 +15,8 @@ def create_execution_consumer_group(redis_client) -> None:
     except Exception as exc:
         if "BUSYGROUP" not in str(exc):
             raise
+
+
+def execution_consumption_is_disabled() -> bool:
+    """P0 guard: durable outbox intent must not be consumed autonomously."""
+    return False
