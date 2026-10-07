@@ -43,3 +43,8 @@ The transactional outbox records durable intent/evidence. No outbox consumer is 
 ## Development rule
 
 Prefer the smallest maintainable implementation that preserves deterministic safety, auditability, idempotency, and transactional integrity.
+
+
+## Current validation state
+
+The primary application CI must pass before merge. Third-party security workflows may report configuration or credential-pattern failures that are not application defects; treat those as workflow hygiene items and do not bypass them silently.
