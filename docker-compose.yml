@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: autonomous
       POSTGRES_USER: autonomous
-      POSTGRES_PASSWORD: local-dev-only
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
     healthcheck:
@@ -16,7 +16,7 @@ services:
   migrate:
     build: ./apps/api
     environment:
-      DATABASE_URL: postgresql://autonomous:local-dev-only@postgres:5432/autonomous
+      DATABASE_URL: postgresql://autonomous@postgres:5432/autonomous
       MIGRATIONS_PATH: /migrations
     volumes:
       - ./db/migrations:/migrations:ro
@@ -30,9 +30,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://autonomous:local-dev-only@postgres:5432/autonomous
-      AUTONOMOUS_API_TOKEN: local-dev-token
-      AUTONOMOUS_ACTOR_ID: local-dev
+      DATABASE_URL: postgresql://autonomous@postgres:5432/autonomous
+      AUTONOMOUS_API_TOKEN: ${AUTONOMOUS_API_TOKEN:?set AUTONOMOUS_API_TOKEN}
+      AUTONOMOUS_ACTOR_ID: ${AUTONOMOUS_ACTOR_ID:-local-dev}
       PYTHONUNBUFFERED: "1"
     volumes:
       - ./apps/api/app:/app/app
