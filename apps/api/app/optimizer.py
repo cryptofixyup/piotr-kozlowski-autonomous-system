@@ -26,25 +26,29 @@ def select_carrier(request: OptimizeRequest):
     return max(candidates, key=carrier_score, default=None)
 
 
-def _rejection(request: OptimizeRequest, reason: str) -> dict:
-    result = {"decision": "reject", "reason": reason}
+def _rejection(request: OptimizeRequest, reason: str, actor_id: str) -> dict:
+    result = {
+        "decision": "reject",
+        "reason": reason,
+        "requires_approval": False,
+    }
     result["audit_event"] = build_audit_event(
         "order.optimization.rejected",
         request.order.id,
-        "system",
+        actor_id,
         result.copy(),
     )
     return result
 
 
-def optimize_order(request: OptimizeRequest):
+def optimize_order(request: OptimizeRequest, actor_id: str = "system"):
     vehicle = select_vehicle(request)
     carrier = select_carrier(request)
 
     if vehicle is None:
-        return _rejection(request, "no_feasible_vehicle")
+        return _rejection(request, "no_feasible_vehicle", actor_id)
     if carrier is None:
-        return _rejection(request, "no_verified_carrier")
+        return _rejection(request, "no_verified_carrier", actor_id)
 
     fuel_cost = (
         request.route.distance_km / 100
@@ -75,7 +79,7 @@ def optimize_order(request: OptimizeRequest):
     result["audit_event"] = build_audit_event(
         "order.optimization.completed",
         request.order.id,
-        "system",
+        actor_id,
         result.copy(),
     )
     return result
