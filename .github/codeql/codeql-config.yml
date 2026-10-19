@@ -1,0 +1,10 @@
+paths:
+  - .
+paths-ignore:
+  - .git
+  - venv
+  - .venv
+  - node_modules
+  - __pycache__
+queries:
+  - uses: security-and-quality
