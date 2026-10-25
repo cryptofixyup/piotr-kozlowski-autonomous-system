@@ -1,0 +1,3 @@
+# Verified documentation example: Idempotency-Key optimize-order-001, not a credential.
+# Exact historical finding only; all other commits, files and rules remain scanned.
+44a145db8a9ec2faa28109239b51727a3b2d6ea3:docs/P0_HARDENING.md:generic-api-key:58

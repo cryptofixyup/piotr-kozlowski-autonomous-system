@@ -19,4 +19,4 @@ def create_execution_consumer_group(redis_client) -> None:
 
 def execution_consumption_is_disabled() -> bool:
     """P0 guard: durable outbox intent must not be consumed autonomously."""
-    return False
+    return True

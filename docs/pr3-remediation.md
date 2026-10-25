@@ -15,3 +15,13 @@ Test-only commit d762f30d0dbc463e8ade7d22aad9e6c503c9c18c ran against PostgreSQL
 Run the application suite with `cd apps/api && pytest -q`. Database integration tests require DATABASE_URL and all migrations. A local run without PostgreSQL skips those tests and is not evidence of database correctness. Use the CI run for the exact repair commit as the integration result.
 
 No execution consumer is enabled. This repair does not merge or deploy the PR.
+
+## Merge blocker repair — 2026-10-25
+
+Test-only commit `8855943130acf23e13a406cf7eab5180b2c9cc51` reproduced four failures against PostgreSQL in Actions run `40241402164`: disabled execution guard, default connection timeout, concurrent migration bootstrap and per-version migration recovery (4 failed, 26 passed).
+
+The repair serializes schema bootstrap and all migration checks with a session advisory lock, uses explicit transactions per version, and adds a five-second connection timeout unless DATABASE_URL specifies one. The P0 execution guard returns true. Compose no longer publishes passwordless PostgreSQL; the API image runs as UID/GID 10001.
+
+Workflow actions are pinned to verified commit SHAs. Gitleaks uses a checksum-verified CLI and the complete PR base/head range (no API pagination); `.gitleaksignore` suppresses only the verified historical documentation idempotency-key example. TruffleHog's duplicate flag is removed. GitGuardian uses its actual upstream commit and default CI command. Optional GitGuardian/Snyk credentials remain optional and their absence is recorded, not claimed as scanner success. Bandit excludes only test paths and tool directories while retaining application scanning. Pytest now permits the audit-reported fixed major version; Dependabot covers both requirements files and GitHub Actions.
+
+Local validation: pytest 9.1.1 reports 23 passed, 7 database-dependent tests skipped; Bandit reports zero findings; Gitleaks scans all 48 original PR commits without findings using the exact documented suppression. PostgreSQL integration and hosted scanner results must be verified on the repair head before merge.

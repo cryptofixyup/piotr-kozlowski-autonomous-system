@@ -3,6 +3,7 @@ import os
 from uuid import uuid4
 
 import psycopg
+from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 import pytest
 
@@ -31,13 +32,13 @@ def migration_database(monkeypatch, tmp_path):
     url = os.environ['DATABASE_URL']
     schema = 'migration_test_' + uuid4().hex
     with psycopg.connect(url, autocommit=True) as conn:
-        conn.execute(f'CREATE SCHEMA {schema}')
+        conn.execute(sql.SQL('CREATE SCHEMA {}').format(sql.Identifier(schema)))
         monkeypatch.setenv('DATABASE_URL', make_conninfo(url, options=f'-c search_path={schema}'))
         monkeypatch.setenv('MIGRATIONS_PATH', str(tmp_path))
         try:
             yield tmp_path
         finally:
-            conn.execute(f'DROP SCHEMA {schema} CASCADE')
+            conn.execute(sql.SQL('DROP SCHEMA {} CASCADE').format(sql.Identifier(schema)))
 
 
 @pytest.mark.integration
