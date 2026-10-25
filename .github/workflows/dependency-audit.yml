@@ -31,7 +31,7 @@ jobs:
       run:
         working-directory: apps/api
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
@@ -42,7 +42,7 @@ jobs:
     name: OSV Scanner
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install OSV-Scanner
         run: |
           curl -fsSL -o osv-scanner             https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_linux_amd64
@@ -54,7 +54,7 @@ jobs:
     name: Dependabot configuration
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate Dependabot configuration
         run: |
           test -f .github/dependabot.yml || test -f .github/dependabot.yaml
@@ -65,7 +65,7 @@ jobs:
     env:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Record optional scanner availability
         if: env.SNYK_TOKEN == ''
         run: echo "Snyk not run; credential unavailable. No Snyk pass claimed." >> "$GITHUB_STEP_SUMMARY"
