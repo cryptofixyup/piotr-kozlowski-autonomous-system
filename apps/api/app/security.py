@@ -35,7 +35,7 @@ def require_actor(
             detail="Bearer authentication required",
         )
 
-    if not hmac.compare_digest(parts[1], configured_credential):
+    if not parts[1].isascii() or not configured_credential.isascii() or not hmac.compare_digest(parts[1], configured_credential):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",

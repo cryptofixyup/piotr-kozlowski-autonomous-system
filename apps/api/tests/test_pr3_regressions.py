@@ -21,7 +21,7 @@ def request_data():
         "order": {"id": str(uuid4()), "origin": "WRO", "destination": "WAW",
                   "weight_kg": 100, "revenue_pln": 5000},
         "route": {"distance_km": 100, "toll_cost_pln": 0},
-        "vehicles": [{"id": "V1", "capacity_kg": 1000, "fuel_l_per_100km": 10}],
+        "vehicles": [{"id": "V1", "capacity_kg": 1000, "fuel_l_per_100km": 10, "available": True}],
         "carriers": [{"id": "C1", "rating": 5, "cost_per_km": 1,
                       "availability": 1, "verified": True}],
         "fuel_price_pln_per_litre": 6,
@@ -97,6 +97,16 @@ def test_decisions_retain_original_requests(database):
     assert snapshots[key2] == second
     assert database.execute("SELECT origin FROM orders WHERE id = %s",
                             (first["order"]["id"],)).fetchone()[0] == "BER"
+    with pytest.raises(psycopg.errors.CheckViolation, match="immutable"):
+        with database.transaction():
+            database.execute(
+                "UPDATE optimization_decisions SET request_snapshot = '{}'::jsonb "
+                "WHERE idempotency_key = %s", (key1,),
+            )
+    assert database.execute(
+        "SELECT request_snapshot FROM optimization_decisions WHERE idempotency_key = %s",
+        (key1,),
+    ).fetchone()[0] == first
 
 
 @pytest.mark.integration

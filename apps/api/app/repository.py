@@ -81,8 +81,9 @@ class PersistenceRepository:
                 """
                 INSERT INTO optimization_decisions
                     (order_id, decision, reason, vehicle_id, carrier_id,
-                     cost_pln, margin_pln, margin_pct, requires_approval, idempotency_key)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     cost_pln, margin_pln, margin_pct, requires_approval, idempotency_key,
+                     request_snapshot)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     order["id"],
@@ -95,6 +96,7 @@ class PersistenceRepository:
                     result.get("margin_pct"),
                     result["requires_approval"],
                     idempotency_key,
+                    Jsonb(request_payload),
                 ),
             )
 

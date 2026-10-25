@@ -8,6 +8,8 @@ def main() -> None:
     database_url = os.environ["DATABASE_URL"]
     migrations_path = Path(os.getenv("MIGRATIONS_PATH", "/migrations"))
     migrations = sorted(migrations_path.glob("*.sql"))
+    if not migrations:
+        raise RuntimeError(f"No SQL migrations found in {migrations_path}")
 
     with psycopg.connect(database_url) as conn:
         conn.execute(

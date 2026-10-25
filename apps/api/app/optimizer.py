@@ -1,6 +1,12 @@
+from math import isfinite
+
 from .audit import build_audit_event
 from .policy import PolicyDecision, evaluate_margin
 from .schemas import OptimizeRequest
+
+
+class InvalidEconomics(ValueError):
+    """Inputs produce arithmetic that cannot be safely represented."""
 
 
 def select_vehicle(request: OptimizeRequest):
@@ -58,12 +64,16 @@ def optimize_order(request: OptimizeRequest, actor_id: str = "system"):
     carrier_cost = request.route.distance_km * carrier.cost_per_km
     total_cost = fuel_cost + carrier_cost + request.route.toll_cost_pln
     margin_pln = request.order.revenue_pln - total_cost
+    if not all(isfinite(value) for value in (total_cost, margin_pln)):
+        raise InvalidEconomics("Cost or margin exceeds the supported arithmetic range")
 
     if request.order.revenue_pln == 0:
         margin_pct = None
         policy = PolicyDecision(False, "negative_margin")
     else:
         margin_pct = 100 * margin_pln / request.order.revenue_pln
+        if not isfinite(margin_pct):
+            raise InvalidEconomics("Margin percentage exceeds the supported arithmetic range")
         policy = evaluate_margin(margin_pct, request.target_margin_pct)
 
     result = {

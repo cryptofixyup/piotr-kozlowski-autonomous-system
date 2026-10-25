@@ -3,7 +3,7 @@ from typing import Annotated
 import psycopg
 from fastapi import Depends, FastAPI, Header, HTTPException, status
 
-from app.optimizer import optimize_order
+from app.optimizer import InvalidEconomics, optimize_order
 from app.repository import IdempotencyConflict, PersistenceRepository
 from app.schemas import OptimizeRequest
 from app.security import ActorContext, require_actor
@@ -32,7 +32,10 @@ def optimize(
             detail="Idempotency-Key must not be empty",
         )
 
-    result = optimize_order(request, actor_id=actor.actor_id)
+    try:
+        result = optimize_order(request, actor_id=actor.actor_id)
+    except InvalidEconomics as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     try:
         return repository.persist_optimization(
