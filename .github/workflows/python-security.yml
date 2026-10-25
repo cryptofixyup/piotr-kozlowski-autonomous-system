@@ -4,17 +4,22 @@ on:
   push:
     branches: [ main, develop ]
     paths:
+      - '.github/workflows/python-security.yml'
       - '**.py'
       - 'requirements.txt'
       - '**.txt'
   pull_request:
     branches: [ main ]
     paths:
+      - '.github/workflows/python-security.yml'
       - '**.py'
       - 'requirements.txt'
       - '**.txt'
   schedule:
     - cron: '0 0 * * *'  # Daily at midnight UTC
+
+permissions:
+  contents: read
 
 jobs:
   bandit-scan:
@@ -22,70 +27,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
       - name: Install Bandit
-        run: pip install bandit==1.7.8
+        run: pip install bandit
 
       - name: Run Bandit
         run: |
           bandit -r . \
-            --exclude-dir .git,venv,node_modules,__pycache__,.venv \
+            --exclude '.git/*,venv/*,node_modules/*,__pycache__/*,.venv/*,./apps/api/tests/*' \
             -f json \
-            -o bandit-report.json || true
+            -o bandit-report.json
 
       - name: Upload Bandit Report
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: bandit-report
           path: bandit-report.json
           retention-days: 30
-
-  safety-check:
-    name: Safety Dependency Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Safety
-        run: pip install safety==2.3.5
-
-      - name: Run Safety Check
-        run: |
-          safety check --full-report --json || true
 
   pip-audit:
     name: Pip Audit Vulnerability Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
       - name: Install pip-audit
-        run: pip install pip-audit==2.7.3
+        run: pip install pip-audit
 
       - name: Run pip-audit
         run: |
-          pip-audit --strict --format json --output pip-audit-report.json || true
+          pip-audit --strict -r apps/api/requirements.txt --format json --output pip-audit-report.json
 
       - name: Upload pip-audit Report
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pip-audit-report
           path: pip-audit-report.json
@@ -96,10 +84,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
@@ -108,15 +96,16 @@ jobs:
 
       - name: Run Semgrep
         run: |
-          semgrep --config=auto \
+          semgrep --error --strict --config=auto \
             --config=p/python \
             --config=p/security-audit \
             --json \
             --output=semgrep-report.json \
-            . || true
+            .
 
       - name: Upload Semgrep Report
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: semgrep-report
           path: semgrep-report.json

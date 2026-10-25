@@ -1,0 +1,7 @@
+name: Autonomous Operations CodeQL
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - apps/api

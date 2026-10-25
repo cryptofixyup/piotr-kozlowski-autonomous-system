@@ -2,11 +2,14 @@ name: CLAUDE.md Invariant Check
 on:
   pull_request:
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   invariants:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Check CLAUDE.md exists
         run: test -f CLAUDE.md
       - name: Rule 4.1 - No divide-by-zero
