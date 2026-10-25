@@ -4,12 +4,14 @@ on:
   push:
     branches: [ main, develop ]
     paths:
+      - '.github/workflows/python-security.yml'
       - '**.py'
       - 'requirements.txt'
       - '**.txt'
   pull_request:
     branches: [ main ]
     paths:
+      - '.github/workflows/python-security.yml'
       - '**.py'
       - 'requirements.txt'
       - '**.txt'
@@ -30,40 +32,22 @@ jobs:
           python-version: '3.11'
 
       - name: Install Bandit
-        run: pip install bandit==1.7.8
+        run: pip install bandit
 
       - name: Run Bandit
         run: |
           bandit -r . \
-            --exclude-dir .git,venv,node_modules,__pycache__,.venv \
+            --exclude .git,venv,node_modules,__pycache__,.venv,apps/api/tests \
             -f json \
-            -o bandit-report.json || true
+            -o bandit-report.json
 
       - name: Upload Bandit Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bandit-report
           path: bandit-report.json
           retention-days: 30
-
-  safety-check:
-    name: Safety Dependency Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Safety
-        run: pip install safety==2.3.5
-
-      - name: Run Safety Check
-        run: |
-          safety check --full-report --json || true
 
   pip-audit:
     name: Pip Audit Vulnerability Scan
@@ -78,13 +62,14 @@ jobs:
           python-version: '3.11'
 
       - name: Install pip-audit
-        run: pip install pip-audit==2.7.3
+        run: pip install pip-audit
 
       - name: Run pip-audit
         run: |
-          pip-audit --strict --format json --output pip-audit-report.json || true
+          pip-audit --strict -r apps/api/requirements.txt --format json --output pip-audit-report.json
 
       - name: Upload pip-audit Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pip-audit-report
@@ -108,14 +93,15 @@ jobs:
 
       - name: Run Semgrep
         run: |
-          semgrep --config=auto \
+          semgrep --error --strict --config=auto \
             --config=p/python \
             --config=p/security-audit \
             --json \
             --output=semgrep-report.json \
-            . || true
+            .
 
       - name: Upload Semgrep Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-report
