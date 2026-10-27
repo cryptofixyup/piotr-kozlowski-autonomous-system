@@ -5,16 +5,16 @@ from app.consolidation import (
 )
 
 
-def load(id, **changes):
-    data = dict(id=id, origin="Warsaw", destination="Berlin",
+def load(load_id, **changes):
+    data = dict(id=load_id, origin="Warsaw", destination="Berlin",
                 earliest_pickup_minute=100, latest_pickup_minute=200,
                 weight_kg=600)
     data.update(changes)
     return ConsolidationLoad(**data)
 
 
-def vehicle(id="V1", **changes):
-    data = dict(id=id, capacity_kg=1500, available=True)
+def vehicle(vehicle_id="V1", **changes):
+    data = dict(id=vehicle_id, capacity_kg=1500, available=True)
     data.update(changes)
     return ConsolidationVehicle(**data)
 
