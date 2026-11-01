@@ -31,3 +31,8 @@ class OptimizeRequest(BaseModel):
     carriers: list[Carrier]
     fuel_price_pln_per_litre: FiniteFloat = Field(gt=0)
     target_margin_pct: FiniteFloat = Field(ge=0, le=100)
+
+class JobRequest(BaseModel):
+    task_type: str = Field(min_length=1, max_length=100)
+    payload: dict = Field(default_factory=dict)
+    max_attempts: int = Field(default=3, ge=1, le=10)
