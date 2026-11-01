@@ -1,7 +1,16 @@
-name: Autonomous Operations CodeQL
+name: "CodeQL config"
 
+# Use CodeQL's default query suites while focusing on security and quality checks.
+disable-default-queries: false
 queries:
+  - uses: security-extended
   - uses: security-and-quality
 
-paths:
-  - apps/api
+# Exclude common generated and local environment paths that are not part of the app source.
+paths-ignore:
+  - ".github/**"
+  - "venv/**"
+  - ".venv/**"
+  - "**/__pycache__/**"
+  - "**/*.pyc"
+  - "**/site-packages/**"
